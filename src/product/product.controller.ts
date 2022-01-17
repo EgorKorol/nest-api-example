@@ -9,6 +9,8 @@ import {
   Param,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 @Controller('product')
@@ -25,6 +27,7 @@ export class ProductController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() dto: ProductModel) {}
 
+  @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post()
   async find(@Body() dto: FindProductDTO) {}

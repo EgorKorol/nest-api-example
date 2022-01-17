@@ -29,7 +29,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/review/create (POST) - success', async () => {
+  it('(POST) /review/create [SUCCESS CASE]', async () => {
     const { body } = await request(app.getHttpServer())
       .post('/review/create')
       .send(testDto)
@@ -39,7 +39,14 @@ describe('AppController (e2e)', () => {
     expect(createdId).toBeDefined();
   });
 
-  it('/review/byProduct/:productId (GET) - success', async () => {
+  it('(POST) /review/create [FAIL CASE]', () => {
+    return request(app.getHttpServer())
+      .post('/review/create')
+      .send({ ...testDto, rating: 0 })
+      .expect(400);
+  });
+
+  it('(GET) /review/byProduct/:productId [SUCCESS CASE]', async () => {
     const { body } = await request(app.getHttpServer())
       .get('/review/byProduct/' + productId)
       .expect(200);
@@ -47,7 +54,7 @@ describe('AppController (e2e)', () => {
     expect(body.length).toBe(1);
   });
 
-  it('/review/byProduct/:productId (GET) - fail', async () => {
+  it('(GET) /review/byProduct/:productId [FAIL CASE]', async () => {
     const { body } = await request(app.getHttpServer())
       .get('/review/byProduct/' + new Types.ObjectId().toHexString())
       .expect(200);
@@ -55,13 +62,13 @@ describe('AppController (e2e)', () => {
     expect(body.length).toBe(0);
   });
 
-  it('/review/:id (DELETE) - success', () => {
+  it('(DELETE) /review/:id [SUCCESS CASE]', () => {
     return request(app.getHttpServer())
       .delete('/review/' + createdId)
       .expect(200);
   });
 
-  it('/review/:id (DELETE) - fail', () => {
+  it('(DELETE) /review/:id [FAIL CASE]', () => {
     return request(app.getHttpServer())
       .delete('/review/' + new Types.ObjectId().toHexString())
       .expect(404, {
